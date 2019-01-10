@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference type="Vaimo\StockStatus\Gateway\Response" for="Vaimo\StockStatus\Api\ResponseInterface"/>
+    <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator">
+        <plugin name="Stock_Status_Validator" type="Vaimo\StockStatus\Plugin\StockStatusValidator"/>
+    </type>
+</config>

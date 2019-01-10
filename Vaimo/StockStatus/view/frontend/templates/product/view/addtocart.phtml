@@ -1,0 +1,77 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Cart'); ?>
+<?php if ($_product->isSaleable()): ?>
+    <div class="box-tocart">
+        <div class="fieldset">
+            <?php if ($block->shouldRenderQuantity()): ?>
+                <div class="field qty">
+                    <label class="label" for="qty"><span><?= /* @escapeNotVerified */ __('Qty') ?></span></label>
+                    <div class="control">
+                        <input type="number"
+                               name="qty"
+                               id="qty"
+                               value="<?= /* @escapeNotVerified */ $block->getProductDefaultQty() * 1 ?>"
+                               title="<?= /* @escapeNotVerified */ __('Qty') ?>"
+                               class="input-text qty"
+                               data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                        />
+                    </div>
+                </div>
+            <?php endif; ?>
+            <div class="actions">
+                <button type="submit"
+                        title="<?= /* @escapeNotVerified */ $buttonTitle ?>"
+                        class="removeaddtocart action primary tocart"
+                        id="product-addtocart-button">
+                    <span><?= /* @escapeNotVerified */ $buttonTitle ?></span>
+                </button>
+                <?= $block->getChildHtml('', true) ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    require(["jquery"],function($) {
+        $(document).ready(function() {
+            var url = "<?php echo $this->getUrl().'vaimo/api/index?sku='.$_product->getSku()?>";
+            console.log(url);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+
+                },
+                complete: function(response) {
+                    console.log(response);
+                    if(response.responseJSON[0].instock == 1){
+                        $(".removeaddtocart").css({"visibility": "visible"});
+                    };
+
+                },
+                error: function (xhr, status, errorThrown) {
+                    console.log('Error .......');
+                }
+            });
+        });
+    });
+</script>
